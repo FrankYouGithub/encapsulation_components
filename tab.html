@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>tab组件</title>
+	<style>
+		div,ul,li {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		li {
+			list-style: none;
+		}
+		.clearfix:after {
+			content: '';
+			display: block;
+			clear: both;
+		}
+		.tab-ct {
+			width: 600px;
+			border: 1px solid rgb(55,74,171);
+			padding: 20px;
+			margin: 0 auto;
+			margin-bottom: 10px;
+		}
+		.tab-ct .tab-header {
+			border-bottom: 1px solid rgb(55,74,171);
+		}
+		.tab-ct .tab-header li {
+			float: left;
+			width: 33.33333%;
+			text-align: center;
+			padding: 10px;
+		}
+		.active {
+			border: 1px solid rgb(55,74,171);
+			border-bottom: 1px solid #fff;
+			margin-bottom: -1px;
+		}
+		.tab-ct .tab-main {
+			margin-top: 30px;
+		}
+		.tab-ct .tab-main li {
+			display: none;
+		}
+		.tab-ct .tab-main .show {
+			display: block;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="tab-ct">
+		<ul class="tab-header clearfix">
+			<li class="active">tab1</li>
+			<li>tab2</li>
+			<li>tab3</li>
+		</ul>
+		<ul class="tab-main">
+			<li class="show">container1</li>
+			<li>container2</li>
+			<li>container3</li>
+		</ul>
+	</div>
+
+	<div class="tab-ct">
+		<ul class="tab-header clearfix">
+			<li class="active">tab1</li>
+			<li>tab2</li>
+			<li>tab3</li>
+		</ul>
+		<ul class="tab-main">
+			<li class="show">container1</li>
+			<li>container2</li>
+			<li>container3</li>
+		</ul>
+	</div>
+   	<script>
+		function Tab($ct){
+			this.$ct = $ct;
+			this.init();
+			this.bind();
+		}
+		Tab.prototype.init = function(){
+			this.tabList = this.$ct.querySelectorAll('.tab-header>li')
+			this.tabContext = this.$ct.querySelectorAll('.tab-main>li')
+		}
+		Tab.prototype.bind = function(){
+			var _this = this
+			this.tabList.forEach(function(tab_Li){
+				tab_Li.onclick = function(e){
+					var target = e.target
+					var index = [].indexOf.call(_this.tabList,target)
+					_this.tabList.forEach(function(li){
+						li.classList.remove('active')
+					})
+					target.classList.add('active')
+	
+					_this.tabContext.forEach(function(context){
+						context.classList.remove('show')
+					})
+					_this.tabContext[index].classList.add('show')
+				}
+			})
+		}
+	
+	
+		new Tab(document.querySelectorAll('.tab-ct')[0])
+	        new Tab(document.querySelectorAll('.tab-ct')[1])
+	</script>
+</body>
+</html>

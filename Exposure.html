@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Exposure</title>
+	<style>
+		.clearfix:after {
+			content: '';
+			display: block;
+			clear: both;
+		}
+		.img-ct {
+			width: 1240px;
+			margin: 0 auto;
+		}
+		.img-ct img {
+			float: left;
+			width: 618px;
+			height: 347px;
+		}
+		.img-ct img:nth-child(Odd) {
+			margin-right: 4px;
+		}
+	</style>
+</head>
+<body>
+	<div class="img-ct clearfix">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bdfe6c92e4.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bdfe6719b2.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bdf7ff0ea9.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bdf7df1223.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bdf7e68718.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bdfe611297.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bdfe4c3637.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bda8d186e6.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bda8beb99b.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bda8b6ff04.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bda0c107df.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2016/11/16/582bda0c9edec.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2015/10/12/561baac47b51d.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2015/10/12/561baac1c397f.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2015/10/12/561baac0ef16e.jpg@618w.jpg" alt="">
+		<img src="" data-src="http://cs.xinpianchang.com/uploadfile/stills/2015/10/12/561baa6be05da.jpg@618w.jpg" alt="">
+	</div>
+	<p id="hello">hello</p>
+
+
+	<script src="jquery/jquery-2.1.1.min.js"></script>
+	<script>
+		
+		/*new Exposure($('#hello'),function($node){
+			$node.text($node.text()+'88888888');
+		})
+		$('.img-ct img').each(function(idx, img){
+		  	new Exposure($(img), function($img){
+		    	showImg($img)
+		  	})
+		})*/
+		var Lazy = (function(){
+			function Exposure($target,callback){
+			this.$target = $target;
+		  	this.callback = callback;
+		  	this.bind();
+		  	this.check();
+		}
+		Exposure.prototype.bind = function(){
+			var _this = this;
+			$(window).on('scroll', function(){
+			    _this.check();
+			})
+		}
+		Exposure.prototype.check = function(){
+			if (this.isShow()) {
+				this.callback(this.$target);
+			}
+		}
+		Exposure.prototype.isShow = function(){
+			var windowHeight = $(window).height(),
+		      	scrollTop = $(window).scrollTop(),
+		      	offsetTop = this.$target.offset().top,
+		      	nodeHeight = this.$target.height();
+		  	if(windowHeight + scrollTop > offsetTop && scrollTop < offsetTop + nodeHeight){
+		    	return true;
+		  	}else{
+		    	return false;
+		  	}
+		}
+		return {
+				init: function($target,callback){
+					$target.each(function(idx,node){
+						new Exposure($(node),callback);
+					})
+				}
+			}
+		})();
+
+		Lazy.init($('#hello'),function($node){
+			$node.text($node.text()+'88888888');
+		})
+		Lazy.init($('.img-ct img'),function($node){
+			showImg($node)
+		})
+		
+		function showImg($img){
+		    $img.attr('src', $img.attr('data-src'));
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Carousel组件</title>
+	<style>
+		@font-face {
+			font-family: 'xxx';
+			src: url('./iconfont/iconfont.eot');
+			src: url('./iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
+			url('./iconfont/iconfont.woff') format('woff'),
+			url('./iconfont/iconfont.ttf') format('truetype'),
+			url('./iconfont/iconfont.svg#iconfont') format('svg');
+		}
+		.xxx{
+			font-family:"xxx" !important;
+			font-size:50px;font-style:normal;
+			-webkit-font-smoothing: antialiased;
+			-webkit-text-stroke-width: 0.2px;
+			-moz-osx-font-smoothing: grayscale;
+		}
+		html,body,div,ul,li,img,span {
+			margin: 0;
+			padding: 0;
+		}
+		li {
+			list-style: none;
+		}
+		.clearfix:after {
+			content: '';
+			display: block;
+			clear: both;
+		}
+		img {
+			width: 1120px;
+			height: 700px;
+			vertical-align: bottom;
+		}
+		.ct {
+			position: relative;
+			width: 1120px;
+			margin: 10px auto;
+			overflow: hidden;
+		}
+		.ct .img-ct {
+			position: relative;
+			width: 5600px;
+			height: 700px;
+			transition: all 0.5s;
+		}
+		.img-ct>li {
+			float: left;
+		}
+		.ct span {
+			color: #fff;
+			position: absolute;
+			top: 50%;
+			margin-top: -25px;
+			z-index: 1;
+			cursor: pointer;
+		}
+		.ct span:hover {
+			color: yellow;
+			opacity: 0.5;
+		}
+		.ct .next {
+			right: 20px;
+		}
+		.ct .previous {
+			left: 20px;
+		}
+		.ct .img-sign {
+			position: absolute;
+			bottom: 20px;
+			left: 50%;
+			margin-left: -75px;
+		}
+		.ct .img-sign li {
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			background-color: #fff;
+			float: left;
+			margin-right: 20px;
+			cursor: pointer;
+		}
+		.ct .img-sign .sign-hover{
+			background-color: red;
+		}
+	</style>
+</head>
+<body>
+	<div class="ct">
+		<ul class="img-ct clearfix">
+			<li><img src="img/1.jpg" alt="1"></li>
+			<li><img src="img/2.jpg" alt="2"></li>
+			<li><img src="img/3.jpg" alt="3"></li>
+			<li><img src="img/4.jpeg" alt="4"></li>
+			<li><img src="img/5.jpg" alt="5"></li>
+		</ul>
+		<span class="next xxx">&#xe623;</span>
+		<span class="previous xxx">&#xe71e;</span>
+		<ul class="img-sign clearfix">
+			<li class="sign-hover"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+	<div class="ct">
+		<ul class="img-ct clearfix">
+			<li><img src="img/1.jpg" alt="1"></li>
+			<li><img src="img/2.jpg" alt="2"></li>
+			<li><img src="img/3.jpg" alt="3"></li>
+			<li><img src="img/4.jpeg" alt="4"></li>
+			<li><img src="img/5.jpg" alt="5"></li>
+		</ul>
+		<span class="next xxx">&#xe623;</span>
+		<span class="previous xxx">&#xe71e;</span>
+		<ul class="img-sign clearfix">
+			<li class="sign-hover"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+	<script>
+		Carousel = (function(){
+			function _Carousel(ct){
+				this.ct = ct;
+				this.init();
+				this.bind();
+				this.playAuto();
+			}
+			_Carousel.prototype.init = function(){
+				this.index = 0;
+				this.key = false;
+				this.nextBtn = this.ct.querySelector('.next');
+				this.preBtn = this.ct.querySelector('.previous')
+				this.imgCt = this.ct.querySelector('.img-ct')
+				this.sign = this.ct.querySelectorAll('.img-sign>li')
+				this.oldLength = this.imgCt.children.length;
+				var firstImg = this.imgCt.firstElementChild.cloneNode(true);
+				var lastImg = this.imgCt.lastElementChild.cloneNode(true);
+				this.itemWidth = this.imgCt.querySelector('img').width
+				this.imgCt.insertBefore(lastImg,this.imgCt.firstChild)
+				this.imgCt.appendChild(firstImg)
+				this.imgCt.style.width = this.imgCt.children.length*this.itemWidth+'px';
+				this.imgCt.style.left = (0-this.itemWidth)+'px'
+			}
+			_Carousel.prototype.bind = function(){
+				var _this = this;
+				this.nextBtn.onclick = function(){
+					if (_this.key) {
+						return
+					}
+					_this.key = true
+					_this.playNext()
+				}
+				this.preBtn.onclick = function(){
+					if (_this.key) {
+						return
+					}
+					_this.key = true
+					_this.playPre()
+				}
+			}
+			_Carousel.prototype.playNext = function(){
+				this.index += 1;
+				this.imgCt.style.left = (parseInt(this.imgCt.style.left)-this.itemWidth)+'px'
+				if (this.index === this.oldLength) {
+					this.index = 0;
+					this.imgCt.style.left = (0-this.itemWidth)+'px';
+				}
+				this.playSign()
+				this.key = false
+			}
+			_Carousel.prototype.playPre = function(){
+				this.index -= 1;
+				this.imgCt.style.left = (parseInt(this.imgCt.style.left)+this.itemWidth)+'px'
+				if (this.index < 0) {
+					this.index = this.oldLength-1;
+					this.imgCt.style.left = -(this.oldLength*this.itemWidth)+'px';
+				}
+				this.playSign()
+				this.key = false
+			}
+			_Carousel.prototype.playSign = function(){
+				this.sign.forEach(function(node){
+					node.classList.remove('sign-hover')
+				})
+				this.sign[this.index].classList.add('sign-hover')
+			}
+			_Carousel.prototype.playAuto = function(){
+				var _this = this
+				setInterval(function(){
+					_this.playNext()
+				},3000)
+			}
+			
+			return {
+				init: function($ct){
+					$ct.forEach(function(node){
+						new _Carousel(node)
+					})
+				}
+			}
+		})();
+		Carousel.init(document.querySelectorAll('.ct'))
+	</script>
+</body>
+</html>
